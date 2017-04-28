@@ -1,0 +1,319 @@
+{
+    "tasks":[
+        {
+            "vm_name":"docker",
+            "memory_mb":"2048",
+            "network_uuid":"d91beb80-62af-4ed3-a956-1297b91c73c8",
+            "uid":"58cb051aeeefae197640d0dc",
+            "classification":"provision_nutanix",
+            "num_cores_per_vcpu":"1",
+            "fixed_cost":0.0,
+            "vm_disk_uuid":"6b462980-ef39-484f-85a2-dc23f8027ee8",
+            "creation_time":1489700122,
+            "variable_cost":0.0,
+            "num_vcpus":"1",
+            "credential_id":"58cb051aeeefae197640d0de",
+            "modification_time":1489713607,
+            "version":10,
+            "critical":true,
+            "editables":[
+
+            ],
+            "name":"Provision Nutanix"
+        },
+        {
+            "uid":"58cb051aeeefae197640d0df",
+            "classification":"runshell",
+            "script":"yum install -y yum-utils\nyum-config-manager --add-repo https:\/\/download.docker.com\/linux\/centos\/docker-ce.repo\nyum makecache fast\nyum install -y docker-ce\nsystemctl enable docker\nsystemctl start docker",
+            "creation_time":1489700122,
+            "credential_id":"58cb051aeeefae197640d0de",
+            "modification_time":1491499009,
+            "version":23,
+            "critical":false,
+            "editables":[
+
+            ],
+            "name":"Install Docker"
+        },
+        {
+            "uid":"58cb051aeeefae197640d0e0",
+            "classification":"runshell",
+            "script":"yum install -y iscsi-initiator-utils\nsystemd-tmpfiles --create\nsystemctl enable iscsid\nsystemctl start iscsid\necho 'y' | docker plugin install ntnx\/nutanix_volume_plugin:1.0 PRISM_IP=@@{PRISMIP}@@ DATASERVICES_IP=@@{DSIP}@@ PRISM_PASSWORD=@@{PRISMPASSWORD}@@ PRISM_USERNAME=@@{PRISMUSERNAME}@@ DEFAULT_CONTAINER=@@{DEFAULTCONTAINER}@@\necho @@{DSIP}@@\necho @@{PRISMIP}@@\necho @@{DEFAULTCONTAINER}@@",
+            "creation_time":1489700122,
+            "credential_id":"58cb051aeeefae197640d0de",
+            "modification_time":1491499009,
+            "version":23,
+            "critical":false,
+            "editables":[
+
+            ],
+            "name":"Install Docker Volume Plugin"
+        }
+    ],
+    "uid":"58cb051aeeefae197640d0e9",
+    "classification":"blueprint",
+    "autoscale_config":{
+        "post_flow":null,
+        "cool_down_period":"1800",
+        "uid":"58cb051aeeefae197640d0fe",
+        "classification":null,
+        "alert_count":"1",
+        "max_count":"1",
+        "pre_flow":null,
+        "min_count":"1",
+        "listen_for":"external",
+        "scale_by":"1",
+        "alert_window":"1800"
+    },
+    "profiles":[
+        {
+            "cost":0.0,
+            "uid":"58cb051aeeefae197640d0dd",
+            "classification":"resource_profile",
+            "service_port":22,
+            "address":"@@{vm_ip}@@",
+            "creation_time":1489700122,
+            "modification_time":1489713607,
+            "version":10,
+            "provider":"58cb051aeeefae197640d0dc",
+            "service_type":"ssh",
+            "automatic_cost":false,
+            "os_type":"Linux",
+            "properties":[
+
+            ],
+            "name":"Provider 1"
+        }
+    ],
+    "strategy_enabled":false,
+    "replaced_tasks":{
+
+    },
+    "environment":"default",
+    "config":{
+        "setup":[
+
+        ],
+        "uid":"58cb051aeeefae197640d0ff",
+        "classification":null,
+        "deploy":[
+
+        ]
+    },
+    "calm-version":"1.8.2",
+    "description":null,
+    "parent":null,
+    "flows":[
+
+    ],
+    "dependencies":[
+
+    ],
+    "credentials":[
+        {
+            "username":"root",
+            "public_key":null,
+            "uid":"58cb051aeeefae197640d0de",
+            "classification":null,
+            "secret_type":"password",
+            "creation_time":1489700122,
+            "modification_time":1489713607,
+            "secret":null,
+            "version":10,
+            "name":"root"
+        }
+    ],
+    "bp_id":null,
+    "properties":[
+        {
+            "uid":"58cb071ceeefae197640d2c5",
+            "classification":null,
+            "url":null,
+            "editable":false,
+            "value":"10.21.237.38",
+            "key":"DSIP",
+            "property_description":null,
+            "property_type":"INTERNAL",
+            "setter":null
+        },
+        {
+            "uid":"58cb071ceeefae197640d2c6",
+            "classification":null,
+            "url":null,
+            "editable":false,
+            "value":"10.21.237.37",
+            "key":"PRISMIP",
+            "property_description":null,
+            "property_type":"INTERNAL",
+            "setter":null
+        },
+        {
+            "uid":"58cb071ceeefae197640d2c7",
+            "classification":null,
+            "url":null,
+            "editable":false,
+            "value":"dockeradmin",
+            "key":"PRISMUSERNAME",
+            "property_description":null,
+            "property_type":"INTERNAL",
+            "setter":null
+        },
+        {
+            "uid":"58cb071ceeefae197640d2c8",
+            "classification":null,
+            "url":null,
+            "editable":false,
+            "value":"nutanix\/4u",
+            "key":"PRISMPASSWORD",
+            "property_description":null,
+            "property_type":"INTERNAL",
+            "setter":null
+        },
+        {
+            "uid":"58cb071ceeefae197640d2c9",
+            "classification":null,
+            "url":null,
+            "editable":false,
+            "value":"default-container-30478",
+            "key":"DEFAULTCONTAINER",
+            "property_description":null,
+            "property_type":"INTERNAL",
+            "setter":null
+        }
+    ],
+    "autoscale_enabled":false,
+    "name":"Docker Host",
+    "setup_ids":{
+
+    },
+    "h":0.0,
+    "resiliency_config":{
+        "post_flow":null,
+        "cool_down_period":"1800",
+        "alert_window":"1800",
+        "classification":null,
+        "alert_count":"1",
+        "pre_flow":null,
+        "listen_for":"internal",
+        "uid":"58cb051aeeefae197640d100"
+    },
+    "current_profile":null,
+    "resiliency_enabled":false,
+    "architecture":[
+        {
+            "tasks":[
+
+            ],
+            "uid":"cid:00000001",
+            "classification":"compute",
+            "autoscale_config":{
+                "post_flow":null,
+                "cool_down_period":"1800",
+                "uid":"58cb051aeeefae197640d0f3",
+                "classification":null,
+                "alert_count":"1",
+                "max_count":"1",
+                "pre_flow":null,
+                "min_count":"1",
+                "listen_for":"external",
+                "scale_by":"1",
+                "alert_window":"1800"
+            },
+            "profiles":[
+                "58cb051aeeefae197640d0dd"
+            ],
+            "strategy_enabled":false,
+            "config":{
+                "setup":[
+
+                ],
+                "uid":"58cb051aeeefae197640d0f6",
+                "classification":null,
+                "deploy":[
+                    "58cb051aeeefae197640d0df",
+                    "58cb051aeeefae197640d0e0"
+                ]
+            },
+            "parent":"58cb051aeeefae197640d0e9",
+            "flows":[
+
+            ],
+            "dependencies":[
+
+            ],
+            "bp_id":"58cb051aeeefae197640d0e9",
+            "properties":[
+
+            ],
+            "autoscale_enabled":false,
+            "name":"Docker Host",
+            "h":0.0,
+            "resiliency_config":{
+                "post_flow":null,
+                "cool_down_period":"1800",
+                "alert_window":"1800",
+                "classification":null,
+                "alert_count":"1",
+                "pre_flow":null,
+                "listen_for":"internal",
+                "uid":"58cb051aeeefae197640d0f4"
+            },
+            "current_profile":"58cb051aeeefae197640d0dd",
+            "resiliency_enabled":false,
+            "w":0.0,
+            "strategy_config":{
+                "post_flow":null,
+                "rollback_pre_flow":null,
+                "classification":null,
+                "rolling_factor":"100",
+                "initial_version":null,
+                "approval_flag":false,
+                "upgrade_flow":null,
+                "rollback_flow":null,
+                "pre_flow":null,
+                "rollback_post_flow":null,
+                "upgrade_type":"rolling_upgrade",
+                "uid":"58cb051aeeefae197640d0f5",
+                "users":[
+
+                ],
+                "teams":[
+
+                ],
+                "emails":[
+
+                ],
+                "initial_count":"1"
+            },
+            "y":264.5,
+            "x":235.0
+        }
+    ],
+    "w":0.0,
+    "strategy_config":{
+        "post_flow":null,
+        "rollback_pre_flow":null,
+        "classification":null,
+        "rolling_factor":"100",
+        "initial_version":null,
+        "approval_flag":false,
+        "upgrade_flow":null,
+        "rollback_flow":null,
+        "pre_flow":null,
+        "rollback_post_flow":null,
+        "upgrade_type":"rolling_upgrade",
+        "uid":"58cb051aeeefae197640d101",
+        "users":[
+
+        ],
+        "teams":[
+
+        ],
+        "emails":[
+
+        ],
+        "initial_count":"1"
+    },
+    "y":0.0,
+    "x":0.0
+}

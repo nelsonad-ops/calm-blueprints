@@ -1,0 +1,410 @@
+{
+    "tasks":[
+        {
+            "vm_name":"kub15master",
+            "memory_mb":"2048",
+            "network_uuid":"36a0d6cb-5358-4d7b-9843-dc8796b90d84",
+            "uid":"588a23fe2a2fbb28a27b3f58",
+            "classification":"provision_nutanix",
+            "num_cores_per_vcpu":"1",
+            "fixed_cost":0.0,
+            "vm_disk_uuid":"0442747e-d1a8-482d-82dc-be7658a355e4",
+            "creation_time":1485981609,
+            "variable_cost":0.0,
+            "num_vcpus":"2",
+            "credential_id":"5892477d2a2fbb7ebba91de5",
+            "modification_time":1485987613,
+            "version":5,
+            "critical":true,
+            "editables":[
+
+            ],
+            "name":"Provision Nutanix"
+        },
+        {
+            "uid":"5892477d2a2fbb7ebba91de6",
+            "classification":"runshell",
+            "script":"cat <<EOF > \/etc\/yum.repos.d\/kubernetes.repo\n[kubernetes]\nname=Kubernetes\nbaseurl=http:\/\/yum.kubernetes.io\/repos\/kubernetes-el7-x86_64\nenabled=1\ngpgcheck=1\nrepo_gpgcheck=1\ngpgkey=https:\/\/packages.cloud.google.com\/yum\/doc\/yum-key.gpg\n       https:\/\/packages.cloud.google.com\/yum\/doc\/rpm-package-key.gpg\nEOF\nsetenforce 0\nyum install -y docker kubelet kubeadm kubectl kubernetes-cni\nsystemctl enable docker && systemctl start docker\nsystemctl enable kubelet && systemctl start kubelet\nkubeadm init --token b1ab67.f7ef3e873542c674\nkubectl taint nodes --all dedicated-\nyum install -y wget\nwget https:\/\/raw.githubusercontent.com\/coreos\/flannel\/master\/Documentation\/kube-flannel.yml\nkubectl apply -f kube-flannel.yml",
+            "creation_time":1485981565,
+            "credential_id":"5892477d2a2fbb7ebba91de5",
+            "modification_time":1485987613,
+            "version":7,
+            "critical":true,
+            "editables":[
+
+            ],
+            "name":"Install kubernetes"
+        },
+        {
+            "vm_name":"minion1",
+            "memory_mb":"4",
+            "network_uuid":"36a0d6cb-5358-4d7b-9843-dc8796b90d84",
+            "uid":"589252702a2fbb31a6ddbbfc",
+            "classification":"provision_nutanix",
+            "num_cores_per_vcpu":"1",
+            "fixed_cost":0.0,
+            "vm_disk_uuid":"0442747e-d1a8-482d-82dc-be7658a355e4",
+            "creation_time":1485984368,
+            "variable_cost":0.0,
+            "num_vcpus":"2",
+            "credential_id":"5892477d2a2fbb7ebba91de5",
+            "modification_time":1485987613,
+            "version":3,
+            "critical":true,
+            "editables":[
+
+            ],
+            "name":"Provision Nutanix"
+        },
+        {
+            "uid":"589252702a2fbb31a6ddbbfe",
+            "classification":"runshell",
+            "script":"cat <<EOF > \/etc\/yum.repos.d\/kubernetes.repo\n[kubernetes]\nname=Kubernetes\nbaseurl=http:\/\/yum.kubernetes.io\/repos\/kubernetes-el7-x86_64\nenabled=1\ngpgcheck=1\nrepo_gpgcheck=1\ngpgkey=https:\/\/packages.cloud.google.com\/yum\/doc\/yum-key.gpg\n       https:\/\/packages.cloud.google.com\/yum\/doc\/rpm-package-key.gpg\nEOF\nsetenforce 0\nyum install -y docker kubelet kubeadm kubectl kubernetes-cni\nsystemctl enable docker && systemctl start docker\nsystemctl enable kubelet && systemctl start kubelet\nkubeadm join --token b1ab67.f7ef3e873542c674 10.21.237.58",
+            "creation_time":1485984368,
+            "credential_id":"5892477d2a2fbb7ebba91de5",
+            "modification_time":1485987613,
+            "version":4,
+            "critical":true,
+            "editables":[
+
+            ],
+            "name":"Install kubminion"
+        }
+    ],
+    "uid":"588a1b8a2a2fbb28a27b38cb",
+    "classification":"blueprint",
+    "autoscale_config":{
+        "post_flow":null,
+        "cool_down_period":"1800",
+        "uid":"588a1b8a2a2fbb28a27b38d1",
+        "classification":null,
+        "alert_count":"1",
+        "max_count":"1",
+        "pre_flow":null,
+        "min_count":"1",
+        "listen_for":"external",
+        "scale_by":"1",
+        "alert_window":"1800"
+    },
+    "profiles":[
+        {
+            "cost":0.0,
+            "uid":"588a23fe2a2fbb28a27b3f59",
+            "classification":"resource_profile",
+            "service_port":22,
+            "address":"@@{vm_ip}@@",
+            "creation_time":1485448190,
+            "modification_time":1485987613,
+            "version":6,
+            "provider":"588a23fe2a2fbb28a27b3f58",
+            "service_type":"ssh",
+            "automatic_cost":false,
+            "os_type":"Linux",
+            "properties":[
+                {
+                    "uid":"58925f1d2a2fbb3c45801b9c",
+                    "classification":null,
+                    "url":null,
+                    "editable":false,
+                    "value":"",
+                    "key":"master",
+                    "property_description":null,
+                    "property_type":"INTERNAL",
+                    "setter":null
+                }
+            ],
+            "name":"Provider 1"
+        },
+        {
+            "cost":0.0,
+            "uid":"589252702a2fbb31a6ddbbfd",
+            "classification":"resource_profile",
+            "service_port":22,
+            "address":"@@{vm_ip}@@",
+            "creation_time":1485984368,
+            "modification_time":1485987613,
+            "version":3,
+            "provider":"589252702a2fbb31a6ddbbfc",
+            "service_type":"ssh",
+            "automatic_cost":false,
+            "os_type":"Linux",
+            "properties":[
+
+            ],
+            "name":"Provider 2"
+        }
+    ],
+    "strategy_enabled":false,
+    "replaced_tasks":{
+
+    },
+    "environment":"default",
+    "config":{
+        "setup":[
+
+        ],
+        "uid":"588a1b8a2a2fbb28a27b38d2",
+        "classification":null,
+        "deploy":[
+
+        ]
+    },
+    "calm-version":"1.8.2",
+    "description":"Deploying Kubernetes as a Service",
+    "parent":null,
+    "flows":[
+
+    ],
+    "dependencies":[
+
+    ],
+    "credentials":[
+        {
+            "username":"root",
+            "public_key":null,
+            "uid":"5892477d2a2fbb7ebba91de5",
+            "classification":null,
+            "secret_type":"password",
+            "creation_time":1485981565,
+            "modification_time":1485987613,
+            "secret":null,
+            "version":5,
+            "name":"rootdefault"
+        }
+    ],
+    "bp_id":null,
+    "properties":[
+
+    ],
+    "autoscale_enabled":false,
+    "name":"Nelson Kubernetes15",
+    "setup_ids":{
+
+    },
+    "h":0.0,
+    "resiliency_config":{
+        "post_flow":null,
+        "cool_down_period":"1800",
+        "alert_window":"1800",
+        "classification":null,
+        "alert_count":"1",
+        "pre_flow":null,
+        "listen_for":"internal",
+        "uid":"588a1b8a2a2fbb28a27b38d3"
+    },
+    "current_profile":null,
+    "resiliency_enabled":false,
+    "architecture":[
+        {
+            "tasks":[
+
+            ],
+            "uid":"cid:00000001",
+            "classification":"compute",
+            "autoscale_config":{
+                "post_flow":null,
+                "cool_down_period":"1800",
+                "uid":"588a23fe2a2fbb28a27b3f6e",
+                "classification":null,
+                "alert_count":"1",
+                "max_count":"1",
+                "pre_flow":null,
+                "min_count":"1",
+                "listen_for":"external",
+                "scale_by":"1",
+                "alert_window":"1800"
+            },
+            "profiles":[
+                "588a23fe2a2fbb28a27b3f59"
+            ],
+            "strategy_enabled":false,
+            "config":{
+                "setup":[
+
+                ],
+                "uid":"588a23fe2a2fbb28a27b3f71",
+                "classification":null,
+                "deploy":[
+                    "5892477d2a2fbb7ebba91de6"
+                ]
+            },
+            "parent":"588a1b8a2a2fbb28a27b38cb",
+            "flows":[
+
+            ],
+            "dependencies":[
+
+            ],
+            "bp_id":"588a1b8a2a2fbb28a27b38cb",
+            "properties":[
+                {
+                    "uid":"589257cd2a2fbb31a6ddd5d1",
+                    "classification":null,
+                    "url":null,
+                    "editable":true,
+                    "value":"",
+                    "key":"kubmasterready",
+                    "property_description":null,
+                    "property_type":"INTERNAL",
+                    "setter":null
+                }
+            ],
+            "autoscale_enabled":false,
+            "name":"Kubmaster",
+            "h":0.0,
+            "resiliency_config":{
+                "post_flow":null,
+                "cool_down_period":"1800",
+                "alert_window":"1800",
+                "classification":null,
+                "alert_count":"1",
+                "pre_flow":null,
+                "listen_for":"internal",
+                "uid":"588a23fe2a2fbb28a27b3f6f"
+            },
+            "current_profile":"588a23fe2a2fbb28a27b3f59",
+            "resiliency_enabled":false,
+            "w":0.0,
+            "strategy_config":{
+                "post_flow":null,
+                "rollback_pre_flow":null,
+                "classification":null,
+                "rolling_factor":"100",
+                "initial_version":null,
+                "approval_flag":false,
+                "upgrade_flow":null,
+                "rollback_flow":null,
+                "pre_flow":null,
+                "rollback_post_flow":null,
+                "upgrade_type":"rolling_upgrade",
+                "uid":"588a23fe2a2fbb28a27b3f70",
+                "users":[
+
+                ],
+                "teams":[
+
+                ],
+                "emails":[
+
+                ],
+                "initial_count":"1"
+            },
+            "y":257.5,
+            "x":256.5
+        },
+        {
+            "tasks":[
+
+            ],
+            "uid":"cid:00000002",
+            "classification":"compute",
+            "autoscale_config":{
+                "post_flow":null,
+                "cool_down_period":"1800",
+                "uid":"589252702a2fbb31a6ddbc26",
+                "classification":null,
+                "alert_count":"1",
+                "max_count":"1",
+                "pre_flow":null,
+                "min_count":"1",
+                "listen_for":"external",
+                "scale_by":"1",
+                "alert_window":"1800"
+            },
+            "profiles":[
+                "589252702a2fbb31a6ddbbfd"
+            ],
+            "strategy_enabled":false,
+            "config":{
+                "setup":[
+
+                ],
+                "uid":"589252702a2fbb31a6ddbc29",
+                "classification":null,
+                "deploy":[
+                    "589252702a2fbb31a6ddbbfe"
+                ]
+            },
+            "parent":"588a1b8a2a2fbb28a27b38cb",
+            "flows":[
+
+            ],
+            "dependencies":[
+
+            ],
+            "bp_id":"588a1b8a2a2fbb28a27b38cb",
+            "properties":[
+
+            ],
+            "autoscale_enabled":false,
+            "name":"Kubminion",
+            "h":0.0,
+            "resiliency_config":{
+                "post_flow":null,
+                "cool_down_period":"1800",
+                "alert_window":"1800",
+                "classification":null,
+                "alert_count":"1",
+                "pre_flow":null,
+                "listen_for":"internal",
+                "uid":"589252702a2fbb31a6ddbc27"
+            },
+            "current_profile":"589252702a2fbb31a6ddbbfd",
+            "resiliency_enabled":false,
+            "w":0.0,
+            "strategy_config":{
+                "post_flow":null,
+                "rollback_pre_flow":null,
+                "classification":null,
+                "rolling_factor":"100",
+                "initial_version":null,
+                "approval_flag":false,
+                "upgrade_flow":null,
+                "rollback_flow":null,
+                "pre_flow":null,
+                "rollback_post_flow":null,
+                "upgrade_type":"rolling_upgrade",
+                "uid":"589252702a2fbb31a6ddbc28",
+                "users":[
+
+                ],
+                "teams":[
+
+                ],
+                "emails":[
+
+                ],
+                "initial_count":"1"
+            },
+            "y":407.0,
+            "x":348.0
+        }
+    ],
+    "w":0.0,
+    "strategy_config":{
+        "post_flow":null,
+        "rollback_pre_flow":null,
+        "classification":null,
+        "rolling_factor":"100",
+        "initial_version":null,
+        "approval_flag":false,
+        "upgrade_flow":null,
+        "rollback_flow":null,
+        "pre_flow":null,
+        "rollback_post_flow":null,
+        "upgrade_type":"rolling_upgrade",
+        "uid":"588a1b8a2a2fbb28a27b38d4",
+        "users":[
+
+        ],
+        "teams":[
+
+        ],
+        "emails":[
+
+        ],
+        "initial_count":"1"
+    },
+    "y":0.0,
+    "x":0.0
+}
